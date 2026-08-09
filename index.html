@@ -71,6 +71,20 @@
   .barbtn:hover{background:#000;color:var(--gold)}
   .barbtn:focus-visible{outline:2px solid #000;outline-offset:2px}
 
+  .room{
+    display:none;height:210px;border-radius:2px;overflow:hidden;
+    background:#0C1A20;position:relative;cursor:grab;
+  }
+  .room.on{display:block}
+  .room:active{cursor:grabbing}
+  .room canvas{width:100%;height:100%;display:block;touch-action:none}
+  .room-hint{
+    position:absolute;bottom:9px;right:11px;z-index:2;
+    font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:rgba(255,255,255,.62);pointer-events:none;
+  }
+  @media (min-width:700px){ .room{height:270px} }
+
   .nightbar-shell{
     position:sticky;top:0;z-index:20;background:var(--white);
     padding:13px 22px 11px;border-bottom:1px solid var(--line);
@@ -208,6 +222,37 @@
     display:block;line-height:1.65;max-width:36ch;margin:0 auto;
   }
 
+  /* scent story */
+  .story{
+    display:none;margin-top:10px;border-left:3px solid var(--gold);
+    background:var(--sea-wash);border-radius:0 2px 2px 0;padding:16px 18px;
+  }
+  .story.on{display:block;animation:rise 550ms cubic-bezier(.2,.7,.3,1)}
+  .story h4{
+    font-family:var(--display);font-weight:700;font-size:17px;
+    color:var(--black);margin-bottom:5px;letter-spacing:-.01em;
+  }
+  .story p{font-family:var(--serif);font-size:14.5px;color:var(--grey);line-height:1.62}
+
+  /* audio */
+  .audio-note{
+    all:unset;display:flex;align-items:center;gap:9px;cursor:pointer;
+    margin-top:14px;padding:11px 14px;border:1px solid var(--line);border-radius:2px;
+    font-size:13.5px;color:var(--grey);box-sizing:border-box;
+    transition:border-color 200ms,color 200ms;
+  }
+  .audio-note:hover{border-color:var(--sea);color:var(--black)}
+  .audio-note:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+  .audio-note .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--line);flex-shrink:0;
+    transition:background 200ms;
+  }
+  .audio-note.playing{border-color:var(--gold);color:var(--black)}
+  .audio-note.playing .dot{background:var(--gold);animation:beat 1.6s ease-in-out infinite}
+  @keyframes beat{0%,100%{opacity:1}50%{opacity:.25}}
+
+  .addr{display:block;margin:6px 0 10px;color:var(--grey)}
+
   .morning{
     display:none;margin-top:14px;border-radius:2px;
     background:var(--sea-wash);border-left:3px solid var(--gold);padding:22px 20px;
@@ -275,6 +320,10 @@
 
 <div class="nightbar-shell">
   <div class="nightbar-inner">
+    <div class="room" id="room">
+      <canvas id="roomcv"></canvas>
+      <span class="room-hint" data-t="drag">Drag to look around</span>
+    </div>
     <div class="nightbar" id="nightbar" role="img" aria-label="A preview of your night">
       <canvas id="tex" aria-hidden="true"></canvas>
     </div>
@@ -348,21 +397,25 @@
       <span class="opt-desc" data-t="s4d">The room kept as it is, with nothing added. Please let us know at booking if you or your companion is sensitive to fragrance.</span>
     </button>
   </div>
+  <div class="story" id="story">
+    <h4 id="storyTitle"></h4>
+    <p id="storyText"></p>
+  </div>
 </section>
 
 <section>
   <h2 data-t="q3">What would you like to hear tonight?</h2>
   <p class="q-note" data-t="q3n">A sound kept very low to close a long day. It softens and fades after ninety minutes.</p>
   <div class="opts two" data-group="sound">
-    <button class="opt" aria-pressed="false" data-val="The bay" data-tex="wave">
+    <button class="opt" aria-pressed="false" data-val="The bay" data-tex="wave" data-audio="rhythm_of_the_bay.mp3">
       <span class="opt-name" data-t="n1">The rhythm of the bay</span>
       <span class="opt-desc" data-t="n1d">The sea, recorded beside Hòn Chồng.</span>
     </button>
-    <button class="opt" aria-pressed="false" data-val="White noise" data-tex="noise">
+    <button class="opt" aria-pressed="false" data-val="White noise" data-tex="noise" data-audio="white_noise.mp3">
       <span class="opt-name" data-t="n2">A soft floor of sound</span>
       <span class="opt-desc" data-t="n2d">Even, gentle white noise that eases what comes from outside.</span>
     </button>
-    <button class="opt" aria-pressed="false" data-val="Rain" data-tex="rain">
+    <button class="opt" aria-pressed="false" data-val="Rain" data-tex="rain" data-audio="night_rain.mp3">
       <span class="opt-name" data-t="n3">Night rain</span>
       <span class="opt-desc" data-t="n3d">Steady rain, without thunder.</span>
     </button>
@@ -371,6 +424,9 @@
       <span class="opt-desc" data-t="n4d">Nothing added.</span>
     </button>
   </div>
+  <button class="audio-note" id="audioNote" type="button">
+    <span class="dot"></span><span id="audioLabel" data-t="audioIdle">Choose a sound to hear it now</span>
+  </button>
 </section>
 
 <section>
@@ -501,7 +557,9 @@
 </div>
 
 <footer>
-  <b>Ru — the rhythm of rest.</b> <span data-t="foot">Student prototype for BUSM4573 Assessment 2, HAN_GROUP 01.
+  <b>Ru — the rhythm of rest.</b>
+  <span class="addr">voco Scenia Bay Nha Trang by IHG · Tower A, 25–26 Phạm Văn Đồng, Nha Trang, Khánh Hòa</span>
+  <span data-t="foot">Student prototype for BUSM4573 Assessment 2, HAN_GROUP 01.
   Prepared for voco Scenia Bay Nha Trang by IHG. Not an official IHG product. Colours and type are brand-aligned,
   not official brand assets. Scent, tea and sound details are proposals, not current hotel offerings.</span>
 </footer>
@@ -574,6 +632,9 @@ var VI={
   mP:"Trước khi ngày mới bắt đầu, Ru chỉ muốn hỏi bạn một điều.",
   mAsk:"Đêm qua, bạn ngủ ngon chứ?",
 
+  audioIdle:"Chọn một thanh âm để nghe thử",
+  drag:"Kéo để nhìn quanh",
+
   hE:"Quầy lễ tân", hT:"Tra cứu lưu trú",
   hH:"Nhập mã Ru của khách để hiện nhịp nghỉ đã chuẩn bị.",
   hArr:"Đến trong tối nay", hSub:"Hồ sơ Ru đã lưu · chuẩn bị trước khi khách đến",
@@ -603,6 +664,35 @@ var VAL={
     "Sunrise light":"Thức cùng bình minh","Curtains only":"Để vịnh gọi ngày mới",
     "Alarm only":"Chỉ cần báo thức","Don't wake me":"Cứ để tôi ngủ"
   }
+};
+
+/* ---------- scent stories ---------- */
+var STORY={
+  en:{
+    "Trầm Hương":["Khánh Hòa and agarwood",
+      "Khánh Hòa has been known for agarwood for generations. The resin forms slowly, deep inside the tree, and the scent has long belonged to ceremony and to quiet hours at home. Because genuine agarwood is rare and costly, we reserve it for our suites."],
+    "Hòn Khói salt & driftwood":["The salt fields at Hòn Khói",
+      "North of the bay, Hòn Khói is one of the province's oldest salt-making areas. The fields are worked at first light, before the heat arrives. This note keeps that hour — mineral, cool, and open."],
+    "Pomelo & lemongrass":["Pomelo leaf and lemongrass",
+      "Pomelo leaves and lemongrass are a familiar pairing in Vietnamese homes — the smell of a kitchen, of washing, of something warm on the stove. It is the lightest of the three, and the easiest on a hot night."],
+    "No fragrance":["Nothing added",
+      "Some rooms are better left alone. The balcony door, the sea air, and the quiet of the north bay are often enough."]
+  },
+  vi:{
+    "Trầm Hương":["Khánh Hòa và trầm hương",
+      "Khánh Hòa gắn với trầm hương qua nhiều thế hệ. Nhựa trầm hình thành chậm rãi trong lòng cây, và hương ấy từ lâu đã thuộc về nghi lễ, về những giờ lặng trong nhà. Vì trầm thật hiếm và đắt, chúng tôi dành riêng hương này cho hạng suite."],
+    "Hòn Khói salt & driftwood":["Ruộng muối Hòn Khói",
+      "Phía bắc vịnh, Hòn Khói là một trong những vùng làm muối lâu đời nhất của tỉnh. Người ta ra đồng từ tờ mờ sáng, trước khi nắng lên. Hương này giữ lại đúng giờ ấy — khoáng, mát và thoáng."],
+    "Pomelo & lemongrass":["Lá bưởi và sả",
+      "Lá bưởi và sả là cặp hương quen thuộc trong nhà người Việt — mùi của gian bếp, của nồi nước gội đầu, của một điều gì đó ấm đang sôi. Nhẹ nhất trong ba hương, và dễ chịu nhất vào đêm nóng."],
+    "No fragrance":["Không thêm gì cả",
+      "Có những căn phòng nên được giữ nguyên. Cánh cửa ban công, hơi biển và sự yên tĩnh của vịnh phía bắc thường đã là đủ."]
+  }
+};
+
+var AUDIO_LABEL={
+  en:{idle:"Choose a sound to hear it now", playing:function(n){return "Playing "+n+" — tap to stop"}, stopped:"Sound stopped — tap a sound to play"},
+  vi:{idle:"Chọn một thanh âm để nghe thử", playing:function(n){return "Đang phát "+n+" — chạm để dừng"}, stopped:"Đã dừng — chạm vào một thanh âm để nghe"}
 };
 
 var PHRASE={
@@ -636,6 +726,7 @@ function applyTheme(){
 document.getElementById('theme').addEventListener('click', function(){
   theme = theme === 'dark' ? 'light' : 'dark';
   applyTheme();
+  if(window.RU3D) pushTo3D();
 });
 
 /* ---------- language ---------- */
@@ -654,6 +745,10 @@ function applyLang(){
   var s=document.getElementById('send');
   s.textContent = sent ? PHRASE[lang].sent : PHRASE[lang].send;
   setReply(); sync(); fillHost();
+  if(typeof showStory==='function'){
+    showStory();
+    setAudioLabel(playingName ? 'playing' : 'idle');
+  }
 }
 function setReply(){
   var p=PHRASE[lang];
@@ -684,12 +779,21 @@ function shade(d){
   var v=Math.round(28-(d*20));
   return "rgb("+v+","+(v+7)+","+(v+9)+")";
 }
+function pushTo3D(){
+  if(window.RU3D) window.RU3D.update({
+    pillow:state.pillow, light:state.dark, tea:state.tea, wake:state.wake,
+    temp:state.temp, tone:tone, darkness:darkness, warmth:warmth,
+    theme:document.documentElement.getAttribute('data-theme')
+  });
+}
+
 function paint(){
   var evening=mix(tone,"#08161C",.35);
   var deep=shade(darkness);
   var dawn=warmth>.7?"#F7B70F":warmth>.3?"#5B6E75":"#31434B";
   bar.style.background="linear-gradient(90deg,"+evening+" 0%,"+deep+" 42%,"+deep+" 74%,"+dawn+" 100%)";
   drawTex();
+  pushTo3D();
 }
 function drawTex(){
   var w=cv.width=cv.offsetWidth*2, h=cv.height=cv.offsetHeight*2;
@@ -733,6 +837,8 @@ document.querySelectorAll('.opts').forEach(function(grp){
       if(btn.dataset.dark) darkness=parseFloat(btn.dataset.dark);
       if(btn.dataset.warm) warmth=parseFloat(btn.dataset.warm);
       if(btn.dataset.tex) tex=btn.dataset.tex;
+      if(key==='scent') showStory();
+      if(key==='sound') playAudio(btn.dataset.audio||null, btn.dataset.val);
       paint();sync();
     });
   });
@@ -809,6 +915,49 @@ document.querySelectorAll('.star').forEach(function(s){
   });
 });
 
+/* ---------- scent story ---------- */
+function showStory(){
+  var box=document.getElementById('story');
+  var pack=STORY[lang][state.scent];
+  if(!pack){ box.classList.remove('on'); return; }
+  document.getElementById('storyTitle').textContent=pack[0];
+  document.getElementById('storyText').textContent=pack[1];
+  box.classList.add('on');
+}
+
+/* ---------- ambient audio ---------- */
+var player=new Audio();
+player.loop=true;
+player.volume=0.55;
+var playingName=null;
+var noteEl=document.getElementById('audioNote');
+var noteLabel=document.getElementById('audioLabel');
+
+function setAudioLabel(kind){
+  var L=AUDIO_LABEL[lang];
+  if(kind==='playing'){ noteLabel.textContent=L.playing(label(playingName)); noteEl.classList.add('playing'); }
+  else if(kind==='stopped'){ noteLabel.textContent=L.stopped; noteEl.classList.remove('playing'); }
+  else { noteLabel.textContent=L.idle; noteEl.classList.remove('playing'); }
+}
+
+function playAudio(file,name){
+  if(!file){ stopAudio(); return; }
+  playingName=name;
+  player.src=file;
+  player.play().then(function(){ setAudioLabel('playing'); })
+               .catch(function(){ setAudioLabel('stopped'); });
+}
+function stopAudio(){
+  player.pause(); player.currentTime=0; playingName=null; setAudioLabel('stopped');
+}
+noteEl.addEventListener('click',function(){
+  if(playingName){ stopAudio(); }
+  else {
+    var sel=document.querySelector('.opts[data-group="sound"] .opt[aria-pressed="true"]');
+    if(sel && sel.dataset.audio) playAudio(sel.dataset.audio, sel.dataset.val);
+  }
+});
+
 var lastLookup=null;
 function fillHost(){
   if(!lastLookup) return;
@@ -833,6 +982,207 @@ window.addEventListener('hashchange',route);
 window.addEventListener('resize',drawTex);
 
 route();applyTheme();paint();applyLang();
+})();
+</script>
+
+<script type="module">
+/* ---------------------------------------------------------
+   Ru — 3D room preview.
+   Loads Three.js from a CDN. If that fails for any reason
+   (blocked network, offline venue), nothing breaks: the
+   night bar stays visible and the page works exactly as before.
+----------------------------------------------------------*/
+(async function(){
+  let THREE;
+  try{
+    THREE = await import('https://unpkg.com/three@0.160.0/build/three.module.js');
+  }catch(e){
+    console.warn('Three.js unavailable — night bar fallback in use.');
+    return;
+  }
+
+  const holder = document.getElementById('room');
+  const cv = document.getElementById('roomcv');
+  const fallback = document.getElementById('nightbar');
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 2, 0.1, 100);
+  const renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+
+  const pivot = new THREE.Group();
+  scene.add(pivot);
+
+  const M = (c,r)=>new THREE.MeshStandardMaterial({color:c,roughness:r===undefined?.85:r});
+
+  /* ---- room shell ---- */
+  const floorMat = M(0xBFAE97,.95);
+  const wallMat  = M(0xE6DCCF,1);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14,14), floorMat);
+  floor.rotation.x = -Math.PI/2; pivot.add(floor);
+
+  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(14,7), wallMat);
+  backWall.position.set(0,3.5,-3.6); pivot.add(backWall);
+
+  const sideWall = new THREE.Mesh(new THREE.PlaneGeometry(8,7), wallMat);
+  sideWall.rotation.y = Math.PI/2; sideWall.position.set(-4.4,3.5,0); pivot.add(sideWall);
+
+  /* ---- window: the night gradient lives here ---- */
+  const winMat = new THREE.MeshBasicMaterial({color:0x14323F});
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(4.4,2.6), winMat);
+  win.rotation.y = Math.PI/2; win.position.set(-4.36,2.5,0.2); pivot.add(win);
+  const frameMat = M(0x4A4239,.6);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(.12,3.0,4.8), frameMat);
+  frame.position.set(-4.38,2.5,0.2); pivot.add(frame);
+
+  /* ---- curtains (they move with the light choice) ---- */
+  const curtainMat = M(0xD9CDBB,1);
+  const curtainL = new THREE.Mesh(new THREE.BoxGeometry(.1,3.1,1.2), curtainMat);
+  const curtainR = new THREE.Mesh(new THREE.BoxGeometry(.1,3.1,1.2), curtainMat);
+  curtainL.position.set(-4.28,2.5,-1.5); curtainR.position.set(-4.28,2.5,1.9);
+  pivot.add(curtainL, curtainR);
+
+  /* ---- bed ---- */
+  const bed = new THREE.Group(); bed.position.set(.6,0,0); pivot.add(bed);
+  const base = new THREE.Mesh(new THREE.BoxGeometry(3.4,.55,4.6), M(0x3B2E24,.7));
+  base.position.y=.28; bed.add(base);
+  const mattress = new THREE.Mesh(new THREE.BoxGeometry(3.2,.45,4.4), M(0xF2EDE4,.95));
+  mattress.position.y=.78; bed.add(mattress);
+  const duvet = new THREE.Mesh(new THREE.BoxGeometry(3.26,.22,3.0), M(0xEDE4D6,1));
+  duvet.position.set(0,1.02,.55); bed.add(duvet);
+  const runner = new THREE.Mesh(new THREE.BoxGeometry(3.3,.06,.9), M(0x1E5566,.8));
+  runner.position.set(0,1.15,1.35); bed.add(runner);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(3.5,1.9,.22), M(0x2E241C,.75));
+  head.position.set(0,1.2,-2.3); bed.add(head);
+
+  const pillows = new THREE.Group(); pillows.position.set(0,1.06,-1.55); bed.add(pillows);
+
+  /* ---- nightstand, lamp, cup ---- */
+  const stand = new THREE.Mesh(new THREE.BoxGeometry(1.0,.85,1.0), M(0x3B2E24,.7));
+  stand.position.set(2.9,.42,-1.9); pivot.add(stand);
+  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(.34,.5,24,1,true),
+    new THREE.MeshStandardMaterial({color:0xF6EBD6,emissive:0xF7B70F,emissiveIntensity:0,side:THREE.DoubleSide}));
+  lampShade.position.set(2.9,1.3,-1.9); pivot.add(lampShade);
+  const cup = new THREE.Mesh(new THREE.CylinderGeometry(.14,.11,.2,18), M(0xFAF6EF,.5));
+  cup.position.set(2.6,.95,-1.6); cup.visible=false; pivot.add(cup);
+
+  /* ---- scent drift ---- */
+  const N=140, pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*8; pos[i*3+1]=Math.random()*4.5; pos[i*3+2]=(Math.random()-.5)*6; }
+  const pGeo=new THREE.BufferGeometry(); pGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const pMat=new THREE.PointsMaterial({color:0xffffff,size:.06,transparent:true,opacity:0,depthWrite:false});
+  const dust=new THREE.Points(pGeo,pMat); pivot.add(dust);
+
+  /* ---- lights ---- */
+  const amb = new THREE.AmbientLight(0xffffff,.9); scene.add(amb);
+  const key = new THREE.DirectionalLight(0xffffff,1.1); key.position.set(-5,5,3); scene.add(key);
+  const lamp = new THREE.PointLight(0xF7B70F,0,7,2); lamp.position.set(2.9,1.35,-1.9); scene.add(lamp);
+
+  camera.position.set(6.4,3.9,6.6);
+  camera.lookAt(0,1.3,0);
+
+  /* ---- pillow shapes ---- */
+  function setPillows(kind){
+    while(pillows.children.length){ const o=pillows.children[0]; pillows.remove(o); o.geometry.dispose(); o.material.dispose(); }
+    let geo, mat;
+    if(kind==='Neck contour'){
+      geo=new THREE.CylinderGeometry(.3,.3,1.3,20); geo.rotateZ(Math.PI/2);
+      mat=M(0xE8E2D6,.85);
+    }else if(kind==='Cooling gel'){
+      geo=new THREE.BoxGeometry(1.35,.3,.85); mat=M(0xCDE7EC,.35);
+    }else if(kind==='Firm support'){
+      geo=new THREE.BoxGeometry(1.35,.34,.8); mat=M(0xF4EFE6,.9);
+    }else{ /* soft down, and the default before a choice */
+      geo=new THREE.BoxGeometry(1.4,.42,.95); mat=M(0xFBF7F0,.98);
+    }
+    for(const x of [-.78,.78]){
+      const m=new THREE.Mesh(geo,mat); m.position.x=x; pillows.add(m);
+    }
+  }
+  setPillows(null);
+
+  /* ---- state ---- */
+  let target = {win:0x14323F, amb:.9, lampI:0, lampE:0, dust:0, dustC:0xffffff,
+                wall:0xE6DCCF, curtain:0, cup:false};
+  const lerpC = (mat,hex,t)=>mat.color.lerp(new THREE.Color(hex),t);
+
+  window.RU3D = { update(s){
+    setPillows(s.pillow);
+
+    // window + light
+    if(s.light==='Full blackout'){ target.win=0x0A1216; target.amb=.42; target.curtain=0; }
+    else if(s.light==='A little light'){ target.win=0x2E5C6E; target.amb=.75; target.curtain=.9; }
+    else { target.win=0x1E4655; target.amb=.7; target.curtain=.5; }
+
+    // morning choice warms the lamp
+    if(s.wake==='Sunrise light'){ target.lampI=2.4; target.lampE=1.2; target.win=0xF0A648; target.amb=1.15; }
+    else if(s.wake==='Curtains only'){ target.lampI=0; target.lampE=0; target.curtain=1.6; }
+    else { target.lampI=.5; target.lampE=.25; }
+
+    // temperature tints the walls
+    const t=s.temp||21;
+    target.wall = t<21 ? 0xD9E4E6 : (t>21 ? 0xEFE0CC : 0xE6DCCF);
+
+    // scent drifts through the room, tinted by the note chosen
+    if(s.tone && s.tone!=='#25302E'){ target.dust=.45; target.dustC=parseInt(s.tone.slice(1),16); }
+    else { target.dust=0; }
+
+    target.cup = !!(s.tea && s.tea!=='Nothing');
+
+    // page theme drives the background behind the room
+    scene.background = new THREE.Color(s.theme==='dark' ? 0x0B1418 : 0xF3EFE8);
+  }};
+
+  /* ---- drag to look around ---- */
+  let dragging=false, lastX=0, spin=0, idle=true;
+  const down=e=>{dragging=true; idle=false; lastX=(e.touches?e.touches[0].clientX:e.clientX);};
+  const move=e=>{ if(!dragging) return;
+    const x=(e.touches?e.touches[0].clientX:e.clientX);
+    spin += (x-lastX)*0.006; lastX=x;
+    spin=Math.max(-0.9,Math.min(0.9,spin));
+  };
+  const up=()=>{dragging=false;};
+  holder.addEventListener('mousedown',down); holder.addEventListener('touchstart',down,{passive:true});
+  window.addEventListener('mousemove',move); window.addEventListener('touchmove',move,{passive:true});
+  window.addEventListener('mouseup',up); window.addEventListener('touchend',up);
+
+  function size(){
+    const w=holder.clientWidth, h=holder.clientHeight;
+    renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize',size);
+
+  let t0=0;
+  function loop(t){
+    requestAnimationFrame(loop);
+    const drift = idle ? Math.sin(t/6000)*0.18 : 0;
+    pivot.rotation.y += ((spin+drift) - pivot.rotation.y)*0.07;
+
+    lerpC(winMat, target.win, .07);
+    lerpC(wallMat, target.wall, .05);
+    amb.intensity += (target.amb - amb.intensity)*.07;
+    lamp.intensity += (target.lampI - lamp.intensity)*.07;
+    lampShade.material.emissiveIntensity += (target.lampE - lampShade.material.emissiveIntensity)*.07;
+    pMat.opacity += (target.dust - pMat.opacity)*.05;
+    pMat.color.lerp(new THREE.Color(target.dustC), .05);
+    curtainL.position.z += ((-1.5 - target.curtain) - curtainL.position.z)*.06;
+    curtainR.position.z += ((1.9 + target.curtain) - curtainR.position.z)*.06;
+    cup.visible = target.cup;
+
+    const a=dust.geometry.attributes.position.array;
+    for(let i=1;i<a.length;i+=3){ a[i]+=0.004; if(a[i]>5) a[i]=0; }
+    dust.geometry.attributes.position.needsUpdate=true;
+
+    renderer.render(scene,camera);
+  }
+
+  // everything built — switch from the night bar to the room
+  fallback.style.display='none';
+  holder.classList.add('on');
+  size();
+  scene.background = new THREE.Color(
+    document.documentElement.getAttribute('data-theme')==='dark' ? 0x0B1418 : 0xF3EFE8);
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
