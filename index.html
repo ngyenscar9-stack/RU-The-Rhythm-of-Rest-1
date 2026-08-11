@@ -94,9 +94,30 @@
 
 
   /* ---------- hero ---------- */
+ .hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 100px 24px 0;
+
+  background-image:
+    linear-gradient(rgba(6,7,8,0.20), rgba(6,7,8,0.50)),
+    url('voco-hero.jpg');
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
   .hero {
-            min-height: 100vh; position: relative; display: flex; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 0;
-            background: linear-gradient(rgba(6,7,8,0.20), rgba(6,7,8,0.50)), url('https://digital.ihg.com/is/image/ihg/voco-nha-trang-10927133085-4x3') center/cover no-repeat fixed;
+    background-attachment: scroll;
+  }
+}
   }
   .hero::after{
     content:"";position:absolute;inset:auto 0 0 0;height:120px;
