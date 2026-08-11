@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ru — the rhythm of rest | voco Scenia Bay Nha Trang</title>
+<title>Ru. — The Rhythm of Rest | voco Scenia Bay Nha Trang</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 <meta name="theme-color" content="#F7B70F">
@@ -13,9 +13,12 @@
 <style>
   /* ---------- LIGHT (default) ---------- */
   :root{
-    --white:#FFFFFF;      /* page background */
-    --black:#000000;      /* main text */
+    --white:#F7F5F2;      /* page background — warm paper */
+    --card:#FFFFFF;       /* raised surfaces */
+    --black:#14161A;      /* main text */
     --gold:#F7B70F;       /* voco gold — same in both themes */
+    --gold-text:#8A6100;  /* gold that is readable as text */
+    --sel:#FBF1DA;        /* chosen option fill */
     --on-gold:#000000;    /* text sitting ON gold — always black */
     --sea-deep:#0F3B4C;   /* headings, "Ru", summary header */
     --sea:#2C7186;        /* accents */
@@ -29,7 +32,10 @@
 
   /* ---------- DARK ---------- */
   html[data-theme="dark"]{
-    --white:#0B1418;
+    --white:#0C1114;
+    --card:#131A1E;
+    --gold-text:#F7B70F;
+    --sel:#241C10;
     --black:#F1F5F6;
     --sea-deep:#9CCBDA;
     --sea:#6FB4C9;
@@ -49,6 +55,21 @@
   }
 
   .wrap{max-width:640px;margin:0 auto;padding:0 22px 88px}
+
+  .stage-visual{position:sticky;top:0;z-index:20;background:var(--white);padding:12px 0 10px}
+
+  @media (min-width:980px){
+    .wrap{
+      max-width:1180px;display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:56px;align-items:start;padding-top:8px;
+    }
+    .stage-visual{top:76px;padding-top:24px}
+    .stage-form{min-width:0}
+    body.host-mode .wrap{display:block;max-width:640px}
+  }
+  body.host-mode .stage-visual,
+  body.host-mode .stage-form{display:none}
 
   .brandbar{background:var(--gold);color:var(--on-gold);padding:11px 22px}
   .brandbar div{
@@ -71,10 +92,52 @@
   .barbtn:hover{background:#000;color:var(--gold)}
   .barbtn:focus-visible{outline:2px solid #000;outline-offset:2px}
 
-  .room{
-    display:none;height:210px;border-radius:2px;overflow:hidden;
-    background:#0C1A20;position:relative;cursor:grab;
+
+  /* ---------- hero ---------- */
+  .hero {
+            min-height: 100vh; position: relative; display: flex; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 0;
+            background: linear-gradient(rgba(6,7,8,0.35), rgba(6,7,8,0.75)), url('https://drive.google.com/file/d/1VHmRlD3QAVmbRR8IFmJMq_KIDx43bsbK/view?usp=sharing') center/cover no-repeat fixed;
   }
+  .hero::after{
+    content:"";position:absolute;inset:auto 0 0 0;height:120px;
+    background:linear-gradient(to bottom,rgba(0,0,0,0),var(--white));
+  }
+  .hero-inner{position:relative;z-index:2;max-width:640px}
+  .hero .eyebrow{color:var(--gold);margin-bottom:26px}
+  .hero h1{
+    font-family:var(--display);font-weight:400;color:#F7F5F2;
+    font-size:clamp(92px,24vw,180px);line-height:.82;letter-spacing:-.04em;
+  }
+  .hero .lockup{color:var(--gold);margin-top:14px}
+  .hero .gloss{
+    color:rgba(247,245,242,.82);margin:26px auto 0;max-width:44ch;
+  }
+  .hero .gloss b{color:#F7F5F2}
+  .hero-cta{
+    all:unset;cursor:pointer;display:inline-block;margin-top:40px;
+    border:1px solid var(--gold);color:var(--gold);
+    padding:16px 42px;border-radius:2px;
+    font-size:11.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+    transition:background 400ms,color 400ms;
+  }
+  .hero-cta:hover{background:var(--gold);color:#0B1418}
+  .hero-cta:focus-visible{outline:2px solid #F7F5F2;outline-offset:3px}
+
+  /* ---------- intro ---------- */
+  .intro{max-width:680px;margin:0 auto;padding:clamp(64px,9vw,110px) 22px clamp(30px,5vw,60px)}
+  .intro h2{margin-bottom:18px}
+  .intro p{
+    font-family:var(--serif);font-size:16px;line-height:1.78;color:var(--grey);margin-bottom:16px;
+  }
+  .intro p b{color:var(--black);font-weight:600}
+  body.host-mode .hero, body.host-mode .intro{display:none}
+
+  .room{
+    display:none;height:230px;border-radius:3px;overflow:hidden;
+    background:#0C1A20;position:relative;cursor:grab;
+    box-shadow:0 18px 44px rgba(0,0,0,.14);
+  }
+  @media (min-width:980px){ .room{height:min(500px,calc(100vh - 260px))} }
   .room.on{display:block}
   .room:active{cursor:grabbing}
   .room canvas{width:100%;height:100%;display:block;touch-action:none}
@@ -83,7 +146,6 @@
     font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
     color:rgba(255,255,255,.62);pointer-events:none;
   }
-  @media (min-width:700px){ .room{height:270px} }
 
   .nightbar-shell{
     position:sticky;top:0;z-index:20;background:var(--white);
@@ -97,6 +159,11 @@
     transition:background 900ms cubic-bezier(.4,0,.2,1);
   }
   .nightbar canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+  body.has3d .nightbar{margin-top:10px;height:44px}
+  @media (max-width:979px){
+    body.has3d .nightbar,
+    body.has3d .nightbar-marks{display:none}
+  }
   .nightbar-marks{
     display:flex;justify-content:space-between;margin-top:6px;
     font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
@@ -122,6 +189,12 @@
   .gloss span{display:block;margin-top:14px}
 
   section{padding:38px 0 34px;border-top:1px solid var(--line)}
+  .q-head{display:flex;align-items:baseline;gap:13px}
+  .qnum{
+    font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:17px;color:var(--gold-text);flex-shrink:0;
+    font-variant-numeric:tabular-nums;
+  }
   h2{
     font-family:var(--display);font-weight:700;
     font-size:29px;letter-spacing:-.018em;line-height:1.22;color:var(--black);
@@ -132,17 +205,17 @@
   .opts.two{grid-template-columns:1fr 1fr}
 
   button.opt{
-    all:unset;cursor:pointer;display:block;background:var(--white);
-    border:1px solid var(--line);border-radius:2px;padding:13px 15px;
-    transition:border-color 200ms,background 200ms,box-shadow 200ms;
+    all:unset;cursor:pointer;display:block;background:var(--card);
+    border:1px solid var(--line);border-radius:3px;padding:15px 17px;
+    transition:border-color 220ms,background 220ms,box-shadow 220ms;
   }
-  button.opt:hover{border-color:var(--sea)}
-  button.opt:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+  button.opt:hover{border-color:var(--gold)}
+  button.opt:focus-visible{outline:2px solid var(--gold-text);outline-offset:2px}
   button.opt[aria-pressed="true"]{
-    background:var(--sea-wash);border-color:var(--sea);
-    box-shadow:inset 3px 0 0 var(--gold);
+    background:var(--sel);border:2px solid var(--gold);padding:14px 16px;
   }
-  .opt-name{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--black);display:block;letter-spacing:-.005em}
+  button.opt[aria-pressed="true"] .opt-name{color:var(--gold-text)}
+  .opt-name{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--black);display:block;letter-spacing:-.005em;transition:color 220ms}
   .opt-vn{
     font-family:var(--serif);font-size:14px;font-weight:500;
     color:var(--sea);display:block;margin-top:1px;
@@ -222,6 +295,35 @@
     display:block;line-height:1.65;max-width:36ch;margin:0 auto;
   }
 
+  .subrow{display:none;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .subrow.on{display:flex;animation:rise 450ms cubic-bezier(.2,.7,.3,1)}
+  .chip{
+    all:unset;cursor:pointer;padding:8px 16px;border:1px solid var(--line);
+    border-radius:30px;font-size:13.5px;color:var(--grey);background:var(--card);
+    transition:border-color 200ms,color 200ms,background 200ms;
+  }
+  .chip:hover{border-color:var(--gold)}
+  .chip:focus-visible{outline:2px solid var(--gold-text);outline-offset:2px}
+  .chip[aria-pressed="true"]{background:var(--sel);border-color:var(--gold);color:var(--gold-text);font-weight:600}
+
+  .notewrap{display:none;margin-top:12px}
+  .notewrap.on{display:block;animation:rise 450ms cubic-bezier(.2,.7,.3,1)}
+  .notewrap label{
+    display:block;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--grey);font-weight:500;margin-bottom:7px;
+  }
+  #note{
+    width:100%;box-sizing:border-box;background:var(--card);border:1px solid var(--line);
+    border-radius:3px;padding:12px 14px;font-family:var(--serif);font-size:14.5px;
+    color:var(--black);line-height:1.6;resize:vertical;
+  }
+  #note:focus{outline:none;border-color:var(--gold)}
+  .confirmline{
+    display:none;margin-top:11px;font-family:var(--serif);font-size:14px;
+    color:var(--grey);border-left:3px solid var(--gold);padding-left:12px;
+  }
+  .confirmline.on{display:block;animation:rise 450ms cubic-bezier(.2,.7,.3,1)}
+
   /* scent story */
   .story{
     display:none;margin-top:10px;border-left:3px solid var(--gold);
@@ -298,6 +400,8 @@
     color:var(--grey);font-size:12.5px;line-height:1.8;
   }
   footer b{color:var(--black);font-weight:500}
+  .credits{display:block;margin-top:10px}
+  .prototype-credit{display:block;margin-top:8px;font-size:11.5px;opacity:.7}
 
   @media (max-width:520px){
     .opts.two{grid-template-columns:1fr}
@@ -318,39 +422,51 @@
   <button id="lang" class="barbtn" aria-label="Switch language">Tiếng Việt</button>
 </div></div>
 
-<div class="nightbar-shell">
-  <div class="nightbar-inner">
-    <div class="room" id="room">
-      <canvas id="roomcv"></canvas>
-      <span class="room-hint" data-t="drag">Drag to look around</span>
-    </div>
-    <div class="nightbar" id="nightbar" role="img" aria-label="A preview of your night">
-      <canvas id="tex" aria-hidden="true"></canvas>
-    </div>
-    <div class="nightbar-marks">
-      <span data-t="mEve">Evening</span>
-      <span data-t="mDeep">Deep night</span>
-      <span data-t="mMorn">Morning</span>
-    </div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow" data-t="eyebrow">Me time &nbsp;·&nbsp; before you arrive</p>
+    <h1>Ru.</h1>
+    <p class="lockup" data-t="lockup">The Rhythm of Rest</p>
+    <p class="gloss" data-t="heroLine">A room prepared around the way you rest — chosen by you, before you arrive.</p>
+    <a class="hero-cta" href="#configurator" data-t="heroCta">Begin your Ru</a>
+  </div>
+</section>
+
+<section class="intro">
+  <div class="q-head"><span class="qnum">—</span><h2 data-t="introT">What Ru means</h2></div>
+  <p data-t="introP1"><b>Ru</b> is a Vietnamese word for the gentle act of lulling someone to rest — through rhythm,
+  sound and quiet comfort. It belongs to lullabies, to the slow sway of a hammock, to the way a long day settles
+  before sleep begins.</p>
+  <p data-t="introP2">At voco Scenia Bay Nha Trang, we reimagine that familiar idea as something personal. Tell us
+  how you rest, and your room is prepared for it before you arrive — pillow, scent, sound, light, temperature and
+  the small ritual that closes your evening. In the morning, we ask one question, and we remember your answer.</p>
+</section>
+
+<div class="wrap" id="configurator">
+
+<div class="stage-visual">
+  <div class="room" id="room">
+    <canvas id="roomcv"></canvas>
+    <span class="room-hint" data-t="drag">Drag to look around</span>
+  </div>
+  <div class="nightbar" id="nightbar" role="img" aria-label="A preview of your night">
+    <canvas id="tex" aria-hidden="true"></canvas>
+  </div>
+  <div class="nightbar-marks" id="nightbarMarks">
+    <span data-t="mEve">Evening</span>
+    <span data-t="mDeep">Deep night</span>
+    <span data-t="mMorn">Morning</span>
   </div>
 </div>
 
-<div class="wrap">
 
-<header>
-  <p class="eyebrow" data-t="eyebrow">Me time &nbsp;·&nbsp; before you arrive</p>
-  <h1>Ru</h1>
-  <p class="lockup" data-t="lockup">the rhythm of rest</p>
-  <p class="gloss" data-t="gloss">
-    <b>Ru</b> is a Vietnamese word for the gentle act of lulling someone to rest — through rhythm,
-    sound and quiet comfort.
-    <span>At voco Scenia Bay Nha Trang, we reimagine that familiar idea as something personal:
-    a room prepared around the way you rest.</span>
-  </p>
-</header>
+<div class="stage-form">
+
+
 
 <section>
-  <h2 data-t="q1">Choose the pillow that suits you</h2>
+  <div class="q-head"><span class="qnum">01</span><h2 data-t="q1">Choose the pillow that suits you</h2></div>
   <p class="q-note" data-t="q1n">Soft, firm or cool — choose the feeling you would like to take into sleep.</p>
   <div class="opts two" data-group="pillow">
     <button class="opt" aria-pressed="false" data-val="Soft down">
@@ -363,7 +479,7 @@
     </button>
     <button class="opt" aria-pressed="false" data-val="Neck contour">
       <span class="opt-name" data-t="p3">Neck support</span>
-      <span class="opt-desc" data-t="p3d">Shaped memory foam — a gentle lift after a long journey.</span>
+      <span class="opt-desc" data-t="p3d">A contoured latex pillow that supports the neck after a long journey.</span>
     </button>
     <button class="opt" aria-pressed="false" data-val="Cooling gel">
       <span class="opt-name" data-t="p4">Cool</span>
@@ -373,20 +489,20 @@
 </section>
 
 <section>
-  <h2 data-t="q2">Choose a scent of the coast</h2>
+  <div class="q-head"><span class="qnum">02</span><h2 data-t="q2">Choose a scent of the coast</h2></div>
   <p class="q-note" data-t="q2n">Three notes drawn from Khánh Hòa, placed lightly in the room with a small card telling you where each one begins.</p>
   <div class="opts" data-group="scent">
-    <button class="opt" aria-pressed="false" data-val="Trầm Hương" data-tone="#3E2E1C">
+    <button class="opt" aria-pressed="false" data-val="Trầm Hương" data-tone="#C87A2E">
       <span class="opt-name"><span data-t="s1">Agarwood</span> <span class="tierflag" data-t="tier">Suite</span></span>
       <span class="opt-vn" data-t="s1v">Trầm Hương</span>
       <span class="opt-desc" data-t="s1d">Warm, deep and quiet. From a province long associated with agarwood — a warm note for the close of the day.</span>
     </button>
-    <button class="opt" aria-pressed="false" data-val="Hòn Khói salt &amp; driftwood" data-tone="#2A3B44">
+    <button class="opt" aria-pressed="false" data-val="Hòn Khói salt &amp; driftwood" data-tone="#9DC6D8">
       <span class="opt-name" data-t="s2">Sea salt &amp; wood</span>
       <span class="opt-vn" data-t="s2v">Hòn Khói</span>
       <span class="opt-desc" data-t="s2d">Clear and open, carrying the faint salt of the fields north of Khánh Hòa.</span>
     </button>
-    <button class="opt" aria-pressed="false" data-val="Pomelo &amp; lemongrass" data-tone="#33421F">
+    <button class="opt" aria-pressed="false" data-val="Pomelo &amp; lemongrass" data-tone="#B9C766">
       <span class="opt-name" data-t="s3">Pomelo &amp; lemongrass</span>
       <span class="opt-vn" data-t="s3v">Bưởi &amp; Sả</span>
       <span class="opt-desc" data-t="s3d">Light and fresh — a soft green space for tropical nights.</span>
@@ -404,7 +520,7 @@
 </section>
 
 <section>
-  <h2 data-t="q3">What would you like to hear tonight?</h2>
+  <div class="q-head"><span class="qnum">03</span><h2 data-t="q3">What would you like to hear tonight?</h2></div>
   <p class="q-note" data-t="q3n">A sound kept very low to close a long day. It softens and fades after ninety minutes.</p>
   <div class="opts two" data-group="sound">
     <button class="opt" aria-pressed="false" data-val="The bay" data-tex="wave" data-audio="rhythm_of_the_bay.mp3">
@@ -430,7 +546,7 @@
 </section>
 
 <section>
-  <h2 data-t="q4">Make the room your own</h2>
+  <div class="q-head"><span class="qnum">04</span><h2 data-t="q4">Make the room your own</h2></div>
   <p class="q-note" data-t="q4n">Before you return to your room, the curtains are drawn and the temperature set to your choosing.</p>
   <div class="opts two" data-group="dark">
     <button class="opt" aria-pressed="false" data-val="Full blackout" data-dark=".97">
@@ -447,31 +563,36 @@
 </section>
 
 <section>
-  <h2 data-t="q5">Something before you rest?</h2>
+  <div class="q-head"><span class="qnum">05</span><h2 data-t="q5">Something before you rest?</h2></div>
   <p class="q-note" data-t="q5n">A small drink waiting by the bed as night falls.</p>
   <div class="opts two" data-group="tea">
-    <button class="opt" aria-pressed="false" data-val="Lotus heart tea">
-      <span class="opt-name" data-t="t1">Lotus heart tea</span>
-      <span class="opt-vn" data-t="t1v">Trà tâm sen</span>
-      <span class="opt-desc" data-t="t1d">A clean, gently bitter note, familiar in Vietnamese tea culture.</span>
-    </button>
-    <button class="opt" aria-pressed="false" data-val="Chamomile">
-      <span class="opt-name" data-t="t2">Chamomile</span>
-      <span class="opt-desc" data-t="t2d">Soft, mild and familiar.</span>
+    <button class="opt" aria-pressed="false" data-val="Lotus heart tea" data-tea="herbal">
+      <span class="opt-name" data-t="t1">Herbal tea selection</span>
+      <span class="opt-vn" data-t="t1v">Tâm sen · Hoa cúc</span>
+      <span class="opt-desc" data-t="t1d">Choose between the gently bitter note of Vietnamese lotus heart tea and soft, floral chamomile.</span>
     </button>
     <button class="opt" aria-pressed="false" data-val="Warm milk">
       <span class="opt-name" data-t="t3">Warm milk</span>
-      <span class="opt-desc" data-t="t3d">Brought up at a time you choose.</span>
+      <span class="opt-desc" data-t="t3d">A familiar comfort, brought up at the time you choose.</span>
+    </button>
+    <button class="opt" aria-pressed="false" data-val="A glass of wine">
+      <span class="opt-name" data-t="t5">A glass of wine</span>
+      <span class="opt-vn" data-t="t5v">Red · White · Sparkling</span>
+      <span class="opt-desc" data-t="t5d">A selected pour from the hotel's evening wine list.</span>
     </button>
     <button class="opt" aria-pressed="false" data-val="Nothing">
       <span class="opt-name" data-t="t4">No, thank you</span>
       <span class="opt-desc" data-t="t4d">The bedside kept clear.</span>
     </button>
   </div>
+  <div class="subrow" id="teaSub">
+    <button class="chip" type="button" data-sub="Lotus heart tea" data-t="sub1">Lotus heart</button>
+    <button class="chip" type="button" data-sub="Chamomile" data-t="sub2">Chamomile</button>
+  </div>
 </section>
 
 <section>
-  <h2 data-t="q6">How would you like to meet the morning?</h2>
+  <div class="q-head"><span class="qnum">06</span><h2 data-t="q6">How would you like to meet the morning?</h2></div>
   <p class="q-note" data-t="q6n">The bay lies to the east. Mornings at Scenia Bay begin with the first light.</p>
   <div class="opts two" data-group="wake">
     <button class="opt" aria-pressed="false" data-val="Sunrise light" data-warm="1">
@@ -494,6 +615,43 @@
 </section>
 
 <section>
+  <div class="q-head"><span class="qnum">07</span><h2 data-t="q7">A little something more?</h2></div>
+  <p class="q-note" data-t="q7n">We can add a thoughtful touch to the room, or simply leave everything exactly as you chose it.</p>
+  <div class="opts two" data-group="occasion">
+    <button class="opt" aria-pressed="false" data-val="Birthday">
+      <span class="opt-name" data-t="o1">Birthday</span>
+      <span class="opt-desc" data-t="o1d">A small cake waiting in the room.</span>
+    </button>
+    <button class="opt" aria-pressed="false" data-val="Anniversary">
+      <span class="opt-name" data-t="o2">Anniversary</span>
+      <span class="opt-desc" data-t="o2d">A subtle celebratory touch, prepared before you arrive.</span>
+    </button>
+    <button class="opt" aria-pressed="false" data-val="Proposal">
+      <span class="opt-name" data-t="o3">Proposal</span>
+      <span class="opt-desc" data-t="o3d">Tell us what you have planned and our team will prepare the details with you.</span>
+    </button>
+    <button class="opt" aria-pressed="false" data-val="Honeymoon">
+      <span class="opt-name" data-t="o4">Honeymoon or newlyweds</span>
+      <span class="opt-desc" data-t="o4d">A warm welcome for the beginning of your stay together.</span>
+    </button>
+    <button class="opt" aria-pressed="false" data-val="Something else">
+      <span class="opt-name" data-t="o5">Something else</span>
+      <span class="opt-desc" data-t="o5d">Anything that would make the room feel more yours.</span>
+    </button>
+    <button class="opt" aria-pressed="false" data-val="Nothing extra">
+      <span class="opt-name" data-t="o6">Nothing extra</span>
+      <span class="opt-desc" data-t="o6d">Keep my Ru exactly as selected.</span>
+    </button>
+  </div>
+  <div class="notewrap" id="noteWrap">
+    <label for="note" data-t="noteLabel">Tell us more</label>
+    <textarea id="note" rows="3" maxlength="300" data-t-ph="notePh"
+      placeholder="Share a note, a celebration detail, or anything else our team should know."></textarea>
+  </div>
+  <p class="confirmline" id="confirmLine" data-t="confirm">Our team will be in touch before you arrive to confirm the details.</p>
+</section>
+
+<section>
   <div class="summary">
     <div class="summary-top">
       <p class="summary-title" data-t="sumT">Your own rhythm of rest</p>
@@ -507,6 +665,7 @@
       <div class="row"><dt data-t="lTemp">Temperature</dt><dd data-slot="temp">21°C</dd></div>
       <div class="row"><dt data-t="lTurn">Evening ritual</dt><dd data-slot="tea">—</dd></div>
       <div class="row"><dt data-t="lMorn">Morning</dt><dd data-slot="wake">—</dd></div>
+      <div class="row"><dt data-t="lOcc">Occasion</dt><dd data-slot="occasion">—</dd></div>
     </dl>
   </div>
 
@@ -533,6 +692,8 @@
   </div>
 </section>
 
+</div><!-- /stage-form -->
+
 <div class="host">
   <p class="eyebrow" data-t="hE">Front desk</p>
   <h2 data-t="hT">Look up a stay</h2>
@@ -551,17 +712,21 @@
       <div class="row"><dt data-t="lTemp">Temperature</dt><dd data-h="temp">—</dd></div>
       <div class="row"><dt data-t="lTurn">Evening ritual</dt><dd data-h="tea">—</dd></div>
       <div class="row"><dt data-t="lMorn">Morning</dt><dd data-h="wake">—</dd></div>
+      <div class="row"><dt data-t="lOcc">Occasion</dt><dd data-h="occasion">—</dd></div>
     </dl>
   </div>
   <a class="host-exit" href="#" data-t="hBack">Back to the guest view</a>
 </div>
 
 <footer>
-  <b>Ru — the rhythm of rest.</b>
+  <b>Ru. — The Rhythm of Rest.</b>
   <span class="addr">voco Scenia Bay Nha Trang by IHG · Tower A, 25–26 Phạm Văn Đồng, Nha Trang, Khánh Hòa</span>
-  <span data-t="foot">Student prototype for BUSM4573 Assessment 2, HAN_GROUP 01.
-  Prepared for voco Scenia Bay Nha Trang by IHG. Not an official IHG product. Colours and type are brand-aligned,
-  not official brand assets. Scent, tea and sound details are proposals, not current hotel offerings.</span>
+  <span data-t="foot">Student prototype developed by HAN_GROUP 01 for BUSM4573 Assessment 2.
+  Prepared for voco Scenia Bay Nha Trang by IHG. Not an official IHG product. Proposed features shown are
+  conceptual and do not represent current hotel offerings.</span>
+  <span class="credits">HAN_GROUP 01 · Nguyen Huyen Anh (S4141771) · Pham Thanh Lan (S4054062) ·
+  Bui Thai Bao Minh (S4186438) · Le Khanh Linh (S4027640)</span>
+  <span class="prototype-credit" data-t="protoCredit">Digital experience prototype lead: Nguyen Huyen Anh (Scarlett) · S4141771</span>
 </footer>
 
 </div>
@@ -572,7 +737,12 @@
 var VI={
   mEve:"Chiều tối", mDeep:"Đêm khuya", mMorn:"Buổi sáng",
   eyebrow:"Me time &nbsp;·&nbsp; trước khi bạn đến",
-  lockup:"nhịp riêng của giấc nghỉ",
+  lockup:"Nhịp Riêng của Giấc Nghỉ",
+  heroLine:"Một căn phòng được chuẩn bị theo cách bạn nghỉ ngơi — do chính bạn chọn, trước khi bạn đến.",
+  heroCta:"Bắt đầu Ru của bạn",
+  introT:"Ru nghĩa là gì",
+  introP1:"<b>Ru</b> là một tiếng Việt thật dịu — lời hát khe khẽ, nhịp võng chậm rãi, là cách một ngày dài lắng xuống trước khi giấc ngủ bắt đầu.",
+  introP2:"Tại voco Scenia Bay Nha Trang, Ru được kể lại theo một cách mới. Hãy cho chúng tôi biết bạn nghỉ ngơi thế nào, và căn phòng sẽ được chuẩn bị sẵn trước khi bạn đến — gối, hương, thanh âm, ánh sáng, nhiệt độ và nghi thức nhỏ khép lại buổi tối. Sáng hôm sau, chúng tôi chỉ hỏi một điều, và ghi nhớ câu trả lời của bạn.",
   gloss:"<b>Ru</b> — một tiếng Việt thật dịu. Là lời hát khe khẽ, là nhịp đưa chậm rãi, là cách một ngày dài dần lắng xuống trước khi giấc ngủ bắt đầu."
     +"<span>Tại voco Scenia Bay Nha Trang, Ru được kể lại theo một cách mới: một nhịp nghỉ được chuẩn bị riêng cho bạn.</span>",
 
@@ -580,7 +750,7 @@ var VI={
   q1n:"Êm mềm, vững chắc hay mát dịu — hãy chọn cảm giác bạn muốn mang theo vào giấc ngủ.",
   p1:"Êm mềm", p1d:"Gối lông vũ ôm nhẹ theo đầu và vai.",
   p2:"Nâng đỡ vững vàng", p2d:"Giữ độ cao ổn định suốt đêm.",
-  p3:"Nâng đỡ vùng cổ", p3d:"Memory foam định hình, nâng đỡ nhẹ nhàng sau một hành trình dài.",
+  p3:"Gối công thái học (cao su)", p3d:"Định hình theo đường cong của cổ, nâng đỡ nhẹ nhàng sau một hành trình dài.",
   p4:"Mát dịu", p4d:"Bề mặt gel mát, dễ chịu trong khí hậu biển Nha Trang.",
 
   q2:"Chọn một hương của miền biển",
@@ -610,10 +780,27 @@ var VI={
 
   q5:"Một chút trước giờ nghỉ?",
   q5n:"Một thức uống nhỏ chờ bên giường khi đêm xuống.",
-  t1:"Trà tâm sen", t1v:"", t1d:"Vị đắng thanh đặc trưng, quen thuộc trong văn hóa thưởng trà Việt.",
-  t2:"Trà hoa cúc", t2d:"Nhẹ nhàng, thanh dịu và quen thuộc.",
-  t3:"Sữa ấm", t3d:"Được mang đến vào thời gian bạn lựa chọn.",
+  t1:"Trà thảo mộc", t1v:"Tâm sen · Hoa cúc",
+  t1d:"Chọn giữa vị đắng thanh của trà tâm sen và hương hoa cúc dịu nhẹ.",
+  sub1:"Tâm sen", sub2:"Hoa cúc",
+  t3:"Sữa ấm", t3d:"Một vị quen thuộc, được mang lên vào giờ bạn chọn.",
+  t5:"Một ly vang", t5v:"Vang đỏ · Vang trắng · Vang sủi",
+  t5d:"Một ly được chọn từ danh mục vang buổi tối của khách sạn.",
   t4:"Không cần, cảm ơn", t4d:"Giữ không gian đầu giường gọn và nguyên bản.",
+
+  q7:"Còn điều gì nữa không?",
+  q7n:"Chúng tôi có thể thêm một chút chu đáo cho căn phòng, hoặc giữ nguyên đúng những gì bạn đã chọn.",
+  o1:"Sinh nhật", o1d:"Một chiếc bánh nhỏ chờ sẵn trong phòng.",
+  o2:"Kỷ niệm", o2d:"Một dấu chúc mừng nhẹ nhàng, chuẩn bị trước khi bạn đến.",
+  o3:"Lời cầu hôn", o3d:"Hãy cho chúng tôi biết bạn dự định thế nào, đội ngũ sẽ cùng bạn chuẩn bị.",
+  o4:"Tuần trăng mật", o4d:"Một lời chào ấm áp cho khởi đầu của hai người.",
+  o5:"Điều gì khác", o5d:"Bất cứ điều gì khiến căn phòng thân thuộc hơn với bạn.",
+  o6:"Không cần thêm", o6d:"Giữ đúng Ru như tôi đã chọn.",
+  noteLabel:"Cho chúng tôi biết thêm",
+  notePh:"Một lời nhắn, một dịp đặc biệt, hay bất cứ điều gì đội ngũ nên biết.",
+  confirm:"Đội ngũ của chúng tôi sẽ liên hệ trước khi bạn đến để xác nhận chi tiết.",
+  lOcc:"Dịp đặc biệt",
+  drag:"Kéo để nhìn quanh",
 
   q6:"Bạn muốn đón ngày mới thế nào?",
   q6n:"Phía Đông mở ra vịnh biển. Mỗi sớm ở Scenia Bay bắt đầu cùng ánh sáng đầu tiên trên vịnh.",
@@ -633,14 +820,14 @@ var VI={
   mAsk:"Đêm qua, bạn ngủ ngon chứ?",
 
   audioIdle:"Chọn một thanh âm để nghe thử",
-  drag:"Kéo để nhìn quanh",
 
   hE:"Quầy lễ tân", hT:"Tra cứu lưu trú",
   hH:"Nhập mã Ru của khách để hiện nhịp nghỉ đã chuẩn bị.",
   hArr:"Đến trong tối nay", hSub:"Hồ sơ Ru đã lưu · chuẩn bị trước khi khách đến",
   hBack:"Quay lại giao diện khách",
 
-  foot:"Bản mẫu sinh viên cho BUSM4573 Assessment 2, HAN_GROUP 01. Thực hiện cho voco Scenia Bay Nha Trang by IHG. Không phải sản phẩm chính thức của IHG. Màu sắc và kiểu chữ được căn theo thương hiệu, không phải tài sản thương hiệu chính thức. Hương, trà và âm thanh là đề xuất, không phải dịch vụ hiện có của khách sạn."
+  foot:"Bản mẫu sinh viên do HAN_GROUP 01 thực hiện cho BUSM4573 Assessment 2, dành cho voco Scenia Bay Nha Trang by IHG. Đây không phải sản phẩm chính thức của IHG. Các tính năng được giới thiệu là đề xuất, chưa phải dịch vụ hiện hành của khách sạn.",
+  protoCredit:"Phụ trách phát triển nguyên mẫu trải nghiệm số: Nguyễn Huyền Anh (Scarlett) · S4141771"
 };
 
 var VAL={
@@ -651,7 +838,10 @@ var VAL={
     "The bay":"The rhythm of the bay","White noise":"A soft floor of sound",
     "Rain":"Night rain","Silence":"Stillness",
     "Full blackout":"Closed to the light","A little light":"A little sky",
-    "Lotus heart tea":"Lotus heart tea","Chamomile":"Chamomile","Warm milk":"Warm milk","Nothing":"Nothing",
+    "Lotus heart tea":"Lotus heart tea","Chamomile":"Chamomile","Warm milk":"Warm milk",
+    "A glass of wine":"A glass of wine","Nothing":"Nothing",
+    "Birthday":"Birthday","Anniversary":"Anniversary","Proposal":"Proposal",
+    "Honeymoon":"Honeymoon","Something else":"Noted for our team","Nothing extra":"Nothing extra",
     "Sunrise light":"With the sunrise","Curtains only":"The bay","Alarm only":"Alarm only","Don't wake me":"Undisturbed"
   },
   vi:{
@@ -660,7 +850,10 @@ var VAL={
     "Pomelo & lemongrass":"Bưởi & sả","No fragrance":"Không hương",
     "The bay":"Nhịp của vịnh","White noise":"Khoảng nền êm","Rain":"Mưa đêm","Silence":"Tĩnh lặng",
     "Full blackout":"Khép trọn ánh sáng","A little light":"Chừa một khoảng trời",
-    "Lotus heart tea":"Trà tâm sen","Chamomile":"Trà hoa cúc","Warm milk":"Sữa ấm","Nothing":"Không cần, cảm ơn",
+    "Lotus heart tea":"Trà tâm sen","Chamomile":"Trà hoa cúc","Warm milk":"Sữa ấm",
+    "A glass of wine":"Một ly vang","Nothing":"Không cần, cảm ơn",
+    "Birthday":"Sinh nhật","Anniversary":"Kỷ niệm","Proposal":"Lời cầu hôn",
+    "Honeymoon":"Tuần trăng mật","Something else":"Đã ghi nhận","Nothing extra":"Không cần thêm",
     "Sunrise light":"Thức cùng bình minh","Curtains only":"Để vịnh gọi ngày mới",
     "Alarm only":"Chỉ cần báo thức","Don't wake me":"Cứ để tôi ngủ"
   }
@@ -698,7 +891,7 @@ var AUDIO_LABEL={
 var PHRASE={
   en:{
     none:"Nothing chosen yet", ready:"Ready", saved:"Saved to your Ru",
-    of:function(n){return n+" of 6 chosen"},
+    of:function(n){return n+" of 7 chosen"},
     send:"Prepare my Ru", sent:"Your Ru is being prepared",
     replyDefault:"Below four stars, a host reaches out the same morning — while you are still with us and the night ahead can still be changed.",
     replyHigh:"Thank you. Ru has remembered what you like, so your next stay begins with a rest that already feels familiar.",
@@ -706,7 +899,7 @@ var PHRASE={
   },
   vi:{
     none:"Chưa chọn mục nào", ready:"Đã sẵn sàng", saved:"Đã lưu vào Ru của bạn",
-    of:function(n){return "Đã chọn "+n+" trên 6"},
+    of:function(n){return "Đã chọn "+n+" trên 7"},
     send:"Chuẩn bị Ru của tôi", sent:"Ru của bạn đang được chuẩn bị",
     replyDefault:"Dưới bốn sao, một thành viên của voco sẽ liên hệ ngay trong sáng — khi bạn vẫn còn ở cùng chúng tôi và đêm sau vẫn còn có thể khác đi.",
     replyHigh:"Cảm ơn bạn. Ru đã ghi nhớ những điều bạn yêu thích, để lần trở lại sau vẫn là một giấc nghỉ thân quen.",
@@ -732,6 +925,8 @@ document.getElementById('theme').addEventListener('click', function(){
 /* ---------- language ---------- */
 var lang="en", EN={}, sent=false, rating=0;
 document.querySelectorAll('[data-t]').forEach(function(el){ EN[el.dataset.t]=el.innerHTML; });
+var ENPH={};
+document.querySelectorAll('[data-t-ph]').forEach(function(el){ ENPH[el.dataset.tPh]=el.placeholder; });
 
 function label(v){ return v ? (VAL[lang][v]||v) : "—"; }
 
@@ -740,6 +935,10 @@ function applyLang(){
   document.querySelectorAll('[data-t]').forEach(function(el){
     var k=el.dataset.t;
     el.innerHTML = lang==="vi" ? (VI[k]!==undefined?VI[k]:EN[k]) : EN[k];
+  });
+  document.querySelectorAll('[data-t-ph]').forEach(function(el){
+    var k=el.dataset.tPh;
+    el.placeholder = lang==="vi" ? (VI[k]||ENPH[k]) : ENPH[k];
   });
   document.getElementById('lang').textContent = lang==="vi" ? "English" : "Tiếng Việt";
   var s=document.getElementById('send');
@@ -761,7 +960,7 @@ document.getElementById('lang').addEventListener('click',function(){
 });
 
 /* ---------- night bar ---------- */
-var state={pillow:null,scent:null,sound:null,dark:null,temp:21,tea:null,wake:null};
+var state={pillow:null,scent:null,sound:null,dark:null,temp:21,tea:null,wake:null,occasion:null};
 var tone="#25302E",darkness=.8,warmth=.35,tex="none";
 var bar=document.getElementById('nightbar');
 var cv=document.getElementById('tex');
@@ -781,7 +980,7 @@ function shade(d){
 }
 function pushTo3D(){
   if(window.RU3D) window.RU3D.update({
-    pillow:state.pillow, light:state.dark, tea:state.tea, wake:state.wake,
+    pillow:state.pillow, light:state.dark, tea:state.tea, wake:state.wake, occasion:state.occasion,
     temp:state.temp, tone:tone, darkness:darkness, warmth:warmth,
     theme:document.documentElement.getAttribute('data-theme')
   });
@@ -839,6 +1038,8 @@ document.querySelectorAll('.opts').forEach(function(grp){
       if(btn.dataset.tex) tex=btn.dataset.tex;
       if(key==='scent') showStory();
       if(key==='sound') playAudio(btn.dataset.audio||null, btn.dataset.val);
+      if(key==='tea') teaUI(btn);
+      if(key==='occasion') occasionUI(btn.dataset.val);
       paint();sync();
     });
   });
@@ -848,7 +1049,7 @@ var temp=document.getElementById('temp');
 temp.addEventListener('input',function(){
   state.temp=+temp.value;
   document.getElementById('tempval').textContent=temp.value;
-  sync();
+  paint(); sync();
 });
 
 var LISTS={
@@ -856,10 +1057,11 @@ var LISTS={
   scent:["Trầm Hương","Hòn Khói salt & driftwood","Pomelo & lemongrass","No fragrance"],
   sound:["The bay","White noise","Rain","Silence"],
   dark:["Full blackout","A little light"],
-  tea:["Lotus heart tea","Chamomile","Warm milk","Nothing"],
-  wake:["Sunrise light","Curtains only","Alarm only","Don't wake me"]
+  tea:["Lotus heart tea","Chamomile","Warm milk","A glass of wine","Nothing"],
+  wake:["Sunrise light","Curtains only","Alarm only","Don't wake me"],
+  occasion:["Birthday","Anniversary","Proposal","Honeymoon","Something else","Nothing extra"]
 };
-var ORDER=["pillow","scent","sound","dark","tea","wake"];
+var ORDER=["pillow","scent","sound","dark","tea","wake","occasion"];
 
 function encode(){
   var n=0;
@@ -883,6 +1085,10 @@ function decode(str){
 }
 
 function sync(){
+  var herbalCard=document.querySelector('.opt[data-tea="herbal"]');
+  if(herbalCard && (state.tea==='Lotus heart tea'||state.tea==='Chamomile')){
+    herbalCard.setAttribute('aria-pressed','true');
+  }
   ORDER.forEach(function(k){
     document.querySelector('[data-slot="'+k+'"]').textContent=label(state[k]);
   });
@@ -890,8 +1096,8 @@ function sync(){
   var done=ORDER.filter(function(k){return state[k]}).length;
   var p=PHRASE[lang];
   document.getElementById('progress').textContent =
-    sent ? p.saved : (done===6 ? p.ready : (done===0 ? p.none : p.of(done)));
-  document.getElementById('send').disabled = sent || done!==6;
+    sent ? p.saved : (done===7 ? p.ready : (done===0 ? p.none : p.of(done)));
+  document.getElementById('send').disabled = sent || done!==7;
 }
 
 document.getElementById('send').addEventListener('click',function(){
@@ -899,6 +1105,8 @@ document.getElementById('send').addEventListener('click',function(){
   this.textContent=PHRASE[lang].sent;
   this.disabled=true;
   document.getElementById('codeout').textContent=encode();
+  var n=document.getElementById('note');
+  if(n) n.setAttribute('readonly','readonly');
   document.getElementById('codecard').classList.add('on');
   document.getElementById('morning').classList.add('on');
   document.getElementById('codecard').scrollIntoView({block:'center'});
@@ -914,6 +1122,37 @@ document.querySelectorAll('.star').forEach(function(s){
     setReply();
   });
 });
+
+/* ---------- evening ritual: herbal tea sub-choice ---------- */
+var teaSub=document.getElementById('teaSub');
+function teaUI(btn){
+  var isHerbal = btn && btn.dataset.tea==='herbal';
+  teaSub.classList.toggle('on', !!isHerbal);
+  if(isHerbal && state.tea!=='Lotus heart tea' && state.tea!=='Chamomile'){
+    state.tea='Lotus heart tea';
+  }
+  markChips();
+}
+function markChips(){
+  teaSub.querySelectorAll('.chip').forEach(function(c){
+    c.setAttribute('aria-pressed', String(c.dataset.sub===state.tea));
+  });
+}
+teaSub.querySelectorAll('.chip').forEach(function(c){
+  c.addEventListener('click',function(){
+    state.tea=c.dataset.sub;
+    markChips(); sync(); pushTo3D();
+  });
+});
+
+/* ---------- occasion ---------- */
+var noteWrap=document.getElementById('noteWrap');
+var confirmLine=document.getElementById('confirmLine');
+function occasionUI(val){
+  noteWrap.classList.toggle('on', val==='Something else' || val==='Proposal');
+  confirmLine.classList.toggle('on',
+    val==='Birthday'||val==='Anniversary'||val==='Proposal'||val==='Honeymoon');
+}
 
 /* ---------- scent story ---------- */
 function showStory(){
@@ -988,9 +1227,9 @@ route();applyTheme();paint();applyLang();
 <script type="module">
 /* ---------------------------------------------------------
    Ru — 3D room preview.
-   Loads Three.js from a CDN. If that fails for any reason
-   (blocked network, offline venue), nothing breaks: the
-   night bar stays visible and the page works exactly as before.
+   Loads Three.js from a CDN. If that fails (blocked network,
+   offline venue) nothing breaks: the night bar stays and the
+   page works exactly as before.
 ----------------------------------------------------------*/
 (async function(){
   let THREE;
@@ -1003,171 +1242,276 @@ route();applyTheme();paint();applyLang();
 
   const holder = document.getElementById('room');
   const cv = document.getElementById('roomcv');
-  const fallback = document.getElementById('nightbar');
+
+  const WALL = 0x373A40;          // your grey
+  const FLOOR = 0x383840;
+  const WOOD  = 0x121215;         // black bed frame
+  const LINEN = 0xF8F8F6;         // clean off-white, no beige
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, 2, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(38, 2, 0.1, 200);
   const renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const pivot = new THREE.Group();
   scene.add(pivot);
-
   const M = (c,r)=>new THREE.MeshStandardMaterial({color:c,roughness:r===undefined?.85:r});
 
-  /* ---- room shell ---- */
-  const floorMat = M(0xBFAE97,.95);
-  const wallMat  = M(0xE6DCCF,1);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14,14), floorMat);
-  floor.rotation.x = -Math.PI/2; pivot.add(floor);
+  /* ---- shell ---- */
+  const floorMat = M(FLOOR,.92);
+  const wallMat  = M(WALL,1);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(16,16), floorMat);
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; pivot.add(floor);
+  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(16,7.5), wallMat);
+  backWall.position.set(0,3.75,-3.8); backWall.receiveShadow = true; pivot.add(backWall);
+  const sideWall = new THREE.Mesh(new THREE.PlaneGeometry(9,7.5), wallMat);
+  sideWall.rotation.y = Math.PI/2; sideWall.position.set(-4.6,3.75,0);
+  sideWall.receiveShadow = true; pivot.add(sideWall);
 
-  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(14,7), wallMat);
-  backWall.position.set(0,3.5,-3.6); pivot.add(backWall);
-
-  const sideWall = new THREE.Mesh(new THREE.PlaneGeometry(8,7), wallMat);
-  sideWall.rotation.y = Math.PI/2; sideWall.position.set(-4.4,3.5,0); pivot.add(sideWall);
-
-  /* ---- window: the night gradient lives here ---- */
+  /* ---- window ---- */
   const winMat = new THREE.MeshBasicMaterial({color:0x14323F});
-  const win = new THREE.Mesh(new THREE.PlaneGeometry(4.4,2.6), winMat);
-  win.rotation.y = Math.PI/2; win.position.set(-4.36,2.5,0.2); pivot.add(win);
-  const frameMat = M(0x4A4239,.6);
-  const frame = new THREE.Mesh(new THREE.BoxGeometry(.12,3.0,4.8), frameMat);
-  frame.position.set(-4.38,2.5,0.2); pivot.add(frame);
-
-  /* ---- curtains (they move with the light choice) ---- */
-  const curtainMat = M(0xD9CDBB,1);
-  const curtainL = new THREE.Mesh(new THREE.BoxGeometry(.1,3.1,1.2), curtainMat);
-  const curtainR = new THREE.Mesh(new THREE.BoxGeometry(.1,3.1,1.2), curtainMat);
-  curtainL.position.set(-4.28,2.5,-1.5); curtainR.position.set(-4.28,2.5,1.9);
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(4.6,2.8), winMat);
+  win.rotation.y = Math.PI/2; win.position.set(-4.56,2.6,0.2); pivot.add(win);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(.12,3.2,5.0), M(0x0E0E11,.6));
+  frame.position.set(-4.58,2.6,0.2); pivot.add(frame);
+  const curtainMat = M(0xE9E6E1,1);
+  const curtainL = new THREE.Mesh(new THREE.BoxGeometry(.1,3.3,1.25), curtainMat);
+  const curtainR = new THREE.Mesh(new THREE.BoxGeometry(.1,3.3,1.25), curtainMat);
+  curtainL.position.set(-4.46,2.6,-1.6); curtainR.position.set(-4.46,2.6,2.0);
+  curtainL.castShadow = curtainR.castShadow = true;
   pivot.add(curtainL, curtainR);
 
   /* ---- bed ---- */
-  const bed = new THREE.Group(); bed.position.set(.6,0,0); pivot.add(bed);
-  const base = new THREE.Mesh(new THREE.BoxGeometry(3.4,.55,4.6), M(0x3B2E24,.7));
-  base.position.y=.28; bed.add(base);
-  const mattress = new THREE.Mesh(new THREE.BoxGeometry(3.2,.45,4.4), M(0xF2EDE4,.95));
-  mattress.position.y=.78; bed.add(mattress);
-  const duvet = new THREE.Mesh(new THREE.BoxGeometry(3.26,.22,3.0), M(0xEDE4D6,1));
-  duvet.position.set(0,1.02,.55); bed.add(duvet);
+  const bed = new THREE.Group(); bed.position.set(.7,0,0); pivot.add(bed);
+  const base = new THREE.Mesh(new THREE.BoxGeometry(3.4,.55,4.6), M(WOOD,.55));
+  base.position.y=.28; base.castShadow=true; base.receiveShadow=true; bed.add(base);
+  const mattress = new THREE.Mesh(new THREE.BoxGeometry(3.2,.45,4.4), M(LINEN,.95));
+  mattress.position.y=.78; mattress.castShadow=true; mattress.receiveShadow=true; bed.add(mattress);
+  const duvet = new THREE.Mesh(new THREE.BoxGeometry(3.26,.24,3.0), M(0xFCFCFA,1));
+  duvet.position.set(0,1.03,.55); duvet.castShadow=true; duvet.receiveShadow=true; bed.add(duvet);
   const runner = new THREE.Mesh(new THREE.BoxGeometry(3.3,.06,.9), M(0x1E5566,.8));
-  runner.position.set(0,1.15,1.35); bed.add(runner);
-  const head = new THREE.Mesh(new THREE.BoxGeometry(3.5,1.9,.22), M(0x2E241C,.75));
-  head.position.set(0,1.2,-2.3); bed.add(head);
-
+  runner.position.set(0,1.17,1.35); runner.castShadow=true; bed.add(runner);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(3.5,2.0,.22), M(WOOD,.6));
+  head.position.set(0,1.25,-2.3); head.castShadow=true; bed.add(head);
   const pillows = new THREE.Group(); pillows.position.set(0,1.06,-1.55); bed.add(pillows);
 
-  /* ---- nightstand, lamp, cup ---- */
-  const stand = new THREE.Mesh(new THREE.BoxGeometry(1.0,.85,1.0), M(0x3B2E24,.7));
-  stand.position.set(2.9,.42,-1.9); pivot.add(stand);
-  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(.34,.5,24,1,true),
-    new THREE.MeshStandardMaterial({color:0xF6EBD6,emissive:0xF7B70F,emissiveIntensity:0,side:THREE.DoubleSide}));
-  lampShade.position.set(2.9,1.3,-1.9); pivot.add(lampShade);
-  const cup = new THREE.Mesh(new THREE.CylinderGeometry(.14,.11,.2,18), M(0xFAF6EF,.5));
-  cup.position.set(2.6,.95,-1.6); cup.visible=false; pivot.add(cup);
+  /* ---- counters: lamp side is by the window, drinks on the far side ---- */
+  const standMat = M(WOOD,.55);
+  const standLamp = new THREE.Mesh(new THREE.BoxGeometry(1.0,.85,1.0), standMat);
+  standLamp.position.set(-1.55,.42,-2.0); standLamp.castShadow=true; standLamp.receiveShadow=true; pivot.add(standLamp);
+  const standDrink = new THREE.Mesh(new THREE.BoxGeometry(1.15,.85,1.0), standMat);
+  standDrink.position.set(3.05,.42,-2.0); standDrink.castShadow=true; standDrink.receiveShadow=true; pivot.add(standDrink);
 
-  /* ---- scent drift ---- */
-  const N=140, pos=new Float32Array(N*3);
-  for(let i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*8; pos[i*3+1]=Math.random()*4.5; pos[i*3+2]=(Math.random()-.5)*6; }
+  const lampGroup = new THREE.Group();
+  const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(.03,.05,.42,12), M(0x24242A,.4));
+  lampStem.position.y=.21; lampGroup.add(lampStem);
+  const shadeMat = new THREE.MeshStandardMaterial({color:0xF6EFE0,emissive:0xF7B70F,emissiveIntensity:0,side:THREE.DoubleSide});
+  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(.30,.44,26,1,true), shadeMat);
+  lampShade.position.y=.60; lampGroup.add(lampShade);
+  lampGroup.position.set(-1.55,.85,-2.0); lampGroup.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+  pivot.add(lampGroup);
+
+  const clock = new THREE.Group();
+  clock.add(new THREE.Mesh(new THREE.BoxGeometry(.46,.24,.18), M(0x141417,.5)));
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(.30,.11),
+    new THREE.MeshStandardMaterial({color:0x2A0F0F,emissive:0xE0402A,emissiveIntensity:1.6}));
+  face.position.z=.095; clock.add(face);
+  clock.position.set(-1.55,.98,-1.72); clock.rotation.y=0.45;
+  clock.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+  clock.visible=false; pivot.add(clock);
+
+  const cup = new THREE.Mesh(new THREE.CylinderGeometry(.14,.11,.2,18), M(0xFBFAF7,.45));
+  cup.position.set(2.9,.95,-1.75); cup.castShadow=true; cup.visible=false; pivot.add(cup);
+
+  const glass = new THREE.Group();
+  const gMat = new THREE.MeshPhysicalMaterial({color:0xF2F6F5,roughness:.06,transmission:.9,thickness:.2,transparent:true,opacity:.85});
+  const bowl = new THREE.Mesh(new THREE.CylinderGeometry(.115,.055,.20,20), gMat); bowl.position.y=.20;
+  const wine = new THREE.Mesh(new THREE.CylinderGeometry(.098,.05,.10,20), M(0x7B1F2E,.25)); wine.position.y=.16;
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(.014,.014,.16,10), gMat); stem.position.y=.05;
+  const foot = new THREE.Mesh(new THREE.CylinderGeometry(.085,.085,.012,20), gMat);
+  glass.add(bowl,wine,stem,foot); glass.position.set(2.9,.86,-1.75); glass.visible=false; pivot.add(glass);
+
+  const cake = new THREE.Group();
+  cake.add(new THREE.Mesh(new THREE.CylinderGeometry(.20,.22,.14,22), M(0xF9F4EC,.8)));
+  const icing = new THREE.Mesh(new THREE.CylinderGeometry(.205,.205,.03,22), M(0xE8C6C0,.7)); icing.position.y=.085; cake.add(icing);
+  const candle = new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.10,8), M(0xFFFFFF,.5)); candle.position.y=.15; cake.add(candle);
+  const flame = new THREE.Mesh(new THREE.SphereGeometry(.022,10,8),
+    new THREE.MeshStandardMaterial({color:0xFFD79A,emissive:0xF7B70F,emissiveIntensity:2}));
+  flame.position.y=.215; cake.add(flame);
+  cake.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+  cake.position.set(3.25,.92,-2.2); cake.visible=false; pivot.add(cake);
+
+  /* ---- scent drift: small, but clearly coloured ---- */
+  const N=190, pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*8.5; pos[i*3+1]=Math.random()*4.8; pos[i*3+2]=(Math.random()-.5)*6.5; }
   const pGeo=new THREE.BufferGeometry(); pGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  const pMat=new THREE.PointsMaterial({color:0xffffff,size:.06,transparent:true,opacity:0,depthWrite:false});
+  const pMat=new THREE.PointsMaterial({color:0xffffff,size:.075,transparent:true,opacity:0,depthWrite:false});
   const dust=new THREE.Points(pGeo,pMat); pivot.add(dust);
 
   /* ---- lights ---- */
-  const amb = new THREE.AmbientLight(0xffffff,.9); scene.add(amb);
-  const key = new THREE.DirectionalLight(0xffffff,1.1); key.position.set(-5,5,3); scene.add(key);
-  const lamp = new THREE.PointLight(0xF7B70F,0,7,2); lamp.position.set(2.9,1.35,-1.9); scene.add(lamp);
-
-  camera.position.set(6.4,3.9,6.6);
-  camera.lookAt(0,1.3,0);
+  const amb = new THREE.AmbientLight(0xffffff,.75); scene.add(amb);
+  const key = new THREE.DirectionalLight(0xffffff,1.25); key.position.set(-6,7,4);
+  key.castShadow=true; key.shadow.mapSize.set(1024,1024);
+  key.shadow.camera.left=-9; key.shadow.camera.right=9;
+  key.shadow.camera.top=9; key.shadow.camera.bottom=-9;
+  key.shadow.camera.near=.5; key.shadow.camera.far=26; key.shadow.bias=-0.0012;
+  scene.add(key);
+  const lamp = new THREE.PointLight(0xF7B70F,0,8,2); lamp.position.set(-1.55,1.5,-2.0); scene.add(lamp);
 
   /* ---- pillow shapes ---- */
-  function setPillows(kind){
-    while(pillows.children.length){ const o=pillows.children[0]; pillows.remove(o); o.geometry.dispose(); o.material.dispose(); }
-    let geo, mat;
+  function plush(w,d,thick,bevel){
+    const sh=new THREE.Shape(), x=w/2, y=d/2, r=Math.min(x,y)*.42;
+    sh.moveTo(-x+r,-y); sh.lineTo(x-r,-y); sh.quadraticCurveTo(x,-y,x,-y+r);
+    sh.lineTo(x,y-r);   sh.quadraticCurveTo(x,y,x-r,y);
+    sh.lineTo(-x+r,y);  sh.quadraticCurveTo(-x,y,-x,y-r);
+    sh.lineTo(-x,-y+r); sh.quadraticCurveTo(-x,-y,-x+r,-y);
+    const g=new THREE.ExtrudeGeometry(sh,{depth:thick,bevelEnabled:true,bevelSegments:9,steps:1,
+      bevelSize:bevel,bevelThickness:bevel});
+    g.center(); g.rotateX(Math.PI/2); return g;
+  }
+  function makeOnePillow(kind){
+    const g=new THREE.Group();
     if(kind==='Neck contour'){
-      geo=new THREE.CylinderGeometry(.3,.3,1.3,20); geo.rotateZ(Math.PI/2);
-      mat=M(0xE8E2D6,.85);
+      const m=M(0xF0EDE6,.75);
+      const back=new THREE.Mesh(new THREE.CylinderGeometry(.30,.30,1.30,22),m);
+      back.rotation.z=Math.PI/2; back.position.set(0,.16,-.20); g.add(back);
+      const front=new THREE.Mesh(new THREE.CylinderGeometry(.20,.20,1.30,22),m);
+      front.rotation.z=Math.PI/2; front.position.set(0,.08,.26); g.add(front);
+      const dip=new THREE.Mesh(new THREE.BoxGeometry(1.30,.14,.28),m);
+      dip.position.set(0,.05,.03); g.add(dip);
     }else if(kind==='Cooling gel'){
-      geo=new THREE.BoxGeometry(1.35,.3,.85); mat=M(0xCDE7EC,.35);
+      const m=new THREE.MeshPhysicalMaterial({color:0x5FC9D2,roughness:.12,metalness:0,
+        transmission:.72,thickness:.7,clearcoat:1,clearcoatRoughness:.1,transparent:true,opacity:.92});
+      g.add(new THREE.Mesh(plush(1.42,.94,.16,.13), m));
     }else if(kind==='Firm support'){
-      geo=new THREE.BoxGeometry(1.35,.34,.8); mat=M(0xF4EFE6,.9);
-    }else{ /* soft down, and the default before a choice */
-      geo=new THREE.BoxGeometry(1.4,.42,.95); mat=M(0xFBF7F0,.98);
+      const m=M(LINEN,.9);
+      g.add(new THREE.Mesh(plush(1.40,.92,.20,.09), m));   // full, but crisp at the edge
+    }else{
+      const m=new THREE.MeshPhysicalMaterial({color:0xFDFCF9,roughness:.98,sheen:.9,sheenColor:0xffffff});
+      g.add(new THREE.Mesh(plush(1.44,.98,.15,.20), m));   // deep bevel = plump, squishy corners
     }
-    for(const x of [-.78,.78]){
-      const m=new THREE.Mesh(geo,mat); m.position.x=x; pillows.add(m);
+    g.position.y=.22;
+    return g;
+  }
+  function setPillows(kind){
+    while(pillows.children.length) pillows.remove(pillows.children[0]);
+    for(const x of [-.80,.80]){
+      const m=makeOnePillow(kind); m.position.x=x;
+      m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+      pillows.add(m);
     }
   }
   setPillows(null);
 
   /* ---- state ---- */
-  let target = {win:0x14323F, amb:.9, lampI:0, lampE:0, dust:0, dustC:0xffffff,
-                wall:0xE6DCCF, curtain:0, cup:false};
-  const lerpC = (mat,hex,t)=>mat.color.lerp(new THREE.Color(hex),t);
+  const mixHex=(a,b,t)=>new THREE.Color(a).lerp(new THREE.Color(b),t).getHex();
+  const shadeOf=(hex,f)=>new THREE.Color(hex).multiplyScalar(f).getHex();
+  let target={win:0x14323F,amb:.75,lampI:0,lampE:0,lampOn:false,dust:0,dustC:0xffffff,
+              wall:WALL,floor:FLOOR,curtain:0,cup:false,glass:false,clock:false,cake:false};
+  const lerpC=(mat,hex,t)=>mat.color.lerp(new THREE.Color(hex),t);
 
-  window.RU3D = { update(s){
+  window.RU3D={ update(s){
     setPillows(s.pillow);
 
-    // window + light
-    if(s.light==='Full blackout'){ target.win=0x0A1216; target.amb=.42; target.curtain=0; }
-    else if(s.light==='A little light'){ target.win=0x2E5C6E; target.amb=.75; target.curtain=.9; }
-    else { target.win=0x1E4655; target.amb=.7; target.curtain=.5; }
+    if(s.light==='Full blackout'){ target.win=0x020203; target.amb=.30; target.curtain=0; }
+    else if(s.light==='A little light'){ target.win=0x9CC6E8; target.amb=.85; target.curtain=.95; }
+    else { target.win=0x2A5566; target.amb=.72; target.curtain=.5; }
 
-    // morning choice warms the lamp
-    if(s.wake==='Sunrise light'){ target.lampI=2.4; target.lampE=1.2; target.win=0xF0A648; target.amb=1.15; }
-    else if(s.wake==='Curtains only'){ target.lampI=0; target.lampE=0; target.curtain=1.6; }
-    else { target.lampI=.5; target.lampE=.25; }
+    if(s.wake==='Sunrise light'){
+      target.win=0xF3C878; target.amb=1.15; target.lampI=2.6; target.lampE=1.4; target.lampOn=true;
+    } else if(s.wake==='Curtains only'){
+      target.lampI=0; target.lampE=0; target.lampOn=false; target.curtain=1.7;
+    } else if(s.wake==='Alarm only' || s.wake==="Don't wake me"){
+      target.lampI=0; target.lampE=0; target.lampOn=false;   // clock only, lamp gone
+    } else {
+      target.lampI=.45; target.lampE=.3; target.lampOn=true;
+    }
+    if(s.light==='Full blackout' && s.wake!=='Sunrise light'){ target.lampOn=false; target.lampI=0; target.lampE=0; }
 
-    // temperature tints the walls
     const t=s.temp||21;
-    target.wall = t<21 ? 0xD9E4E6 : (t>21 ? 0xEFE0CC : 0xE6DCCF);
+    let tint;
+    if(t<21){ tint=mixHex(WALL,0x4E7FA6,Math.min(1,(21-t)/4)); }
+    else if(t>21){ tint=mixHex(WALL,0xB05236,Math.min(1,(t-21)/5)); }
+    else tint=WALL;
+    target.wall=tint; target.floor=shadeOf(tint,.92);
 
-    // scent drifts through the room, tinted by the note chosen
-    if(s.tone && s.tone!=='#25302E'){ target.dust=.45; target.dustC=parseInt(s.tone.slice(1),16); }
-    else { target.dust=0; }
+    if(s.tone && s.tone!=='#25302E'){ target.dust=.85; target.dustC=parseInt(s.tone.slice(1),16); }
+    else target.dust=0;
 
-    target.cup = !!(s.tea && s.tea!=='Nothing');
+    target.cup=!!(s.tea && s.tea!=='Nothing' && s.tea!=='A glass of wine');
+    target.glass=(s.tea==='A glass of wine');
+    target.clock=(s.wake==='Alarm only');
+    target.cake=(s.occasion==='Birthday');
 
-    // page theme drives the background behind the room
-    scene.background = new THREE.Color(s.theme==='dark' ? 0x0B1418 : 0xF3EFE8);
+    scene.background=new THREE.Color(s.theme==='dark'?0x0B1418:0xF3EFE8);
   }};
 
-  /* ---- drag to look around ---- */
-  let dragging=false, lastX=0, spin=0, idle=true;
-  const down=e=>{dragging=true; idle=false; lastX=(e.touches?e.touches[0].clientX:e.clientX);};
-  const move=e=>{ if(!dragging) return;
-    const x=(e.touches?e.touches[0].clientX:e.clientX);
-    spin += (x-lastX)*0.006; lastX=x;
-    spin=Math.max(-0.9,Math.min(0.9,spin));
-  };
-  const up=()=>{dragging=false;};
-  holder.addEventListener('mousedown',down); holder.addEventListener('touchstart',down,{passive:true});
-  window.addEventListener('mousemove',move); window.addEventListener('touchmove',move,{passive:true});
-  window.addEventListener('mouseup',up); window.addEventListener('touchend',up);
+  /* ---- orbit: 360° drag, vertical tilt, wheel + pinch zoom ---- */
+  let az=0.0, pol=1.12, dist=11.4, dragging=false, lx=0, ly=0, idle=true, pinch=0;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  function place(){
+    camera.position.set(
+      Math.sin(az)*Math.sin(pol)*dist,
+      Math.cos(pol)*dist,
+      Math.cos(az)*Math.sin(pol)*dist
+    );
+    camera.lookAt(0,1.35,0);
+  }
+  const pt=e=>e.touches?e.touches[0]:e;
+  holder.addEventListener('mousedown',e=>{dragging=true;idle=false;lx=e.clientX;ly=e.clientY;});
+  holder.addEventListener('touchstart',e=>{
+    idle=false;
+    if(e.touches.length===2){ pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY); }
+    else { dragging=true; lx=e.touches[0].clientX; ly=e.touches[0].clientY; }
+  },{passive:true});
+  window.addEventListener('mousemove',e=>{
+    if(!dragging) return;
+    az -= (e.clientX-lx)*0.008; pol = clamp(pol-(e.clientY-ly)*0.006, .35, 1.48);
+    lx=e.clientX; ly=e.clientY;
+  });
+  holder.addEventListener('touchmove',e=>{
+    if(e.touches.length===2){
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      dist=clamp(dist-(d-pinch)*0.03, 5.2, 17); pinch=d; return;
+    }
+    if(!dragging) return;
+    const p=e.touches[0];
+    az -= (p.clientX-lx)*0.008; pol = clamp(pol-(p.clientY-ly)*0.006, .35, 1.48);
+    lx=p.clientX; ly=p.clientY;
+  },{passive:true});
+  window.addEventListener('mouseup',()=>dragging=false);
+  window.addEventListener('touchend',()=>{dragging=false;});
+  holder.addEventListener('wheel',e=>{
+    e.preventDefault(); idle=false;
+    dist=clamp(dist+e.deltaY*0.012, 5.2, 17);
+  },{passive:false});
 
   function size(){
-    const w=holder.clientWidth, h=holder.clientHeight;
+    const w=holder.clientWidth,h=holder.clientHeight;
     renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
   }
   window.addEventListener('resize',size);
 
-  let t0=0;
   function loop(t){
     requestAnimationFrame(loop);
-    const drift = idle ? Math.sin(t/6000)*0.18 : 0;
-    pivot.rotation.y += ((spin+drift) - pivot.rotation.y)*0.07;
+    if(idle) az = Math.sin(t/9000)*0.22;
+    place();
 
-    lerpC(winMat, target.win, .07);
-    lerpC(wallMat, target.wall, .05);
-    amb.intensity += (target.amb - amb.intensity)*.07;
-    lamp.intensity += (target.lampI - lamp.intensity)*.07;
-    lampShade.material.emissiveIntensity += (target.lampE - lampShade.material.emissiveIntensity)*.07;
-    pMat.opacity += (target.dust - pMat.opacity)*.05;
-    pMat.color.lerp(new THREE.Color(target.dustC), .05);
-    curtainL.position.z += ((-1.5 - target.curtain) - curtainL.position.z)*.06;
-    curtainR.position.z += ((1.9 + target.curtain) - curtainR.position.z)*.06;
-    cup.visible = target.cup;
+    lerpC(winMat,target.win,.08);
+    lerpC(wallMat,target.wall,.05);
+    lerpC(floorMat,target.floor,.05);
+    amb.intensity += (target.amb-amb.intensity)*.07;
+    lamp.intensity += (target.lampI-lamp.intensity)*.07;
+    shadeMat.emissiveIntensity += (target.lampE-shadeMat.emissiveIntensity)*.07;
+    lampGroup.visible = target.lampOn;
+    curtainL.position.z += ((-1.6-target.curtain)-curtainL.position.z)*.06;
+    curtainR.position.z += ((2.0+target.curtain)-curtainR.position.z)*.06;
+    pMat.opacity += (target.dust-pMat.opacity)*.05;
+    pMat.color.lerp(new THREE.Color(target.dustC),.06);
+    cup.visible=target.cup; glass.visible=target.glass;
+    clock.visible=target.clock; cake.visible=target.cake;
 
     const a=dust.geometry.attributes.position.array;
     for(let i=1;i<a.length;i+=3){ a[i]+=0.004; if(a[i]>5) a[i]=0; }
@@ -1176,12 +1520,11 @@ route();applyTheme();paint();applyLang();
     renderer.render(scene,camera);
   }
 
-  // everything built — switch from the night bar to the room
-  fallback.style.display='none';
+  document.body.classList.add('has3d');
   holder.classList.add('on');
-  size();
-  scene.background = new THREE.Color(
-    document.documentElement.getAttribute('data-theme')==='dark' ? 0x0B1418 : 0xF3EFE8);
+  size(); place();
+  scene.background=new THREE.Color(
+    document.documentElement.getAttribute('data-theme')==='dark'?0x0B1418:0xF3EFE8);
   requestAnimationFrame(loop);
 })();
 </script>
