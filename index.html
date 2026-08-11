@@ -1270,12 +1270,15 @@ route();applyTheme();paint();applyLang();
   sideWall.rotation.y = Math.PI/2; sideWall.position.set(-4.6,3.75,0);
   sideWall.receiveShadow = true; pivot.add(sideWall);
 
-  /* ---- window ---- */
+ /* ---- window ---- */
+  // the glass sits clear of the wall and of the frame — anything sharing a
+  // depth plane here shows up as blocky z-fighting across the pane
   const winMat = new THREE.MeshBasicMaterial({color:0x14323F});
   const win = new THREE.Mesh(new THREE.PlaneGeometry(4.6,2.8), winMat);
   win.rotation.y = Math.PI/2; win.position.set(-4.50,2.6,0.2);
   win.renderOrder = 1; pivot.add(win);
-
+ 
+  // frame as four slim bars around the opening, not a slab behind it
   const frameMat = M(0x0E0E11,.55);
   const frameGroup = new THREE.Group();
   const barV = new THREE.BoxGeometry(.10,3.0,.16);
@@ -1288,12 +1291,20 @@ route();applyTheme();paint();applyLang();
   frameGroup.position.set(-4.46,2.6,0.2);
   frameGroup.traverse(o=>{if(o.isMesh)o.castShadow=true;});
   pivot.add(frameGroup);
-  const curtainMat = M(0xE9E6E1,1);
-  const curtainL = new THREE.Mesh(new THREE.BoxGeometry(.1,3.3,1.25), curtainMat);
-  const curtainR = new THREE.Mesh(new THREE.BoxGeometry(.1,3.3,1.25), curtainMat);
-  curtainL.position.set(-4.46,2.6,-1.6); curtainR.position.set(-4.46,2.6,2.0);
+  // curtains hang clear in front of the frame — any overlap with the
+  // frame bars shows up as a speckled fringe along the edges
+  const curtainMat = M(0xDEDAD3,1);
+  const curtainL = new THREE.Mesh(new THREE.BoxGeometry(.07,3.5,1.3), curtainMat);
+  const curtainR = new THREE.Mesh(new THREE.BoxGeometry(.07,3.5,1.3), curtainMat);
+  curtainL.position.set(-4.26,2.55,-1.6); curtainR.position.set(-4.26,2.55,2.0);
   curtainL.castShadow = curtainR.castShadow = true;
+  curtainL.receiveShadow = curtainR.receiveShadow = true;
   pivot.add(curtainL, curtainR);
+ 
+  const rod = new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,5.2,12), M(0x1A1A1E,.4));
+  rod.rotation.x = Math.PI/2; rod.position.set(-4.26,4.34,0.2);
+  rod.castShadow = true; pivot.add(rod);
+ 
 
   /* ---- bed ---- */
   const bed = new THREE.Group(); bed.position.set(.7,0,0); pivot.add(bed);
