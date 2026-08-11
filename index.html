@@ -1273,9 +1273,21 @@ route();applyTheme();paint();applyLang();
   /* ---- window ---- */
   const winMat = new THREE.MeshBasicMaterial({color:0x14323F});
   const win = new THREE.Mesh(new THREE.PlaneGeometry(4.6,2.8), winMat);
-  win.rotation.y = Math.PI/2; win.position.set(-4.56,2.6,0.2); pivot.add(win);
-  const frame = new THREE.Mesh(new THREE.BoxGeometry(.12,3.2,5.0), M(0x0E0E11,.6));
-  frame.position.set(-4.58,2.6,0.2); pivot.add(frame);
+  win.rotation.y = Math.PI/2; win.position.set(-4.50,2.6,0.2);
+  win.renderOrder = 1; pivot.add(win);
+
+  const frameMat = M(0x0E0E11,.55);
+  const frameGroup = new THREE.Group();
+  const barV = new THREE.BoxGeometry(.10,3.0,.16);
+  const barH = new THREE.BoxGeometry(.10,.16,5.0);
+  const fTop = new THREE.Mesh(barH, frameMat); fTop.position.set(0, 1.50, 0);
+  const fBot = new THREE.Mesh(barH, frameMat); fBot.position.set(0,-1.50, 0);
+  const fL   = new THREE.Mesh(barV, frameMat); fL.position.set(0, 0, -2.42);
+  const fR   = new THREE.Mesh(barV, frameMat); fR.position.set(0, 0,  2.42);
+  frameGroup.add(fTop,fBot,fL,fR);
+  frameGroup.position.set(-4.46,2.6,0.2);
+  frameGroup.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+  pivot.add(frameGroup);
   const curtainMat = M(0xE9E6E1,1);
   const curtainL = new THREE.Mesh(new THREE.BoxGeometry(.1,3.3,1.25), curtainMat);
   const curtainR = new THREE.Mesh(new THREE.BoxGeometry(.1,3.3,1.25), curtainMat);
